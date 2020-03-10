@@ -1,28 +1,74 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="wrapper">
+    <Search @images="searchPhotos" />
+    <Gallery @image-clicked="imageClicked" :images="images" :isSubmitted="isSubmitted" />
+    <Lightbox
+      @close-modal="closeModal"
+      :images="images"
+      :currentIndex="currentIndex"
+      :modalImage="modalImage"
+      :modalOpen="modalOpen"
+      :portrait="portrait"
+      :name="name"
+      :download="download"
+    />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import Search from "@/components/Search.vue";
+import Gallery from "@/components/Gallery.vue";
+import Lightbox from "@/components/Lightbox.vue";
 export default {
-  name: 'App',
+  name: "App",
+  data() {
+    return {
+      images: [],
+      currentIndex: null || 0,
+      modalImage: null,
+      isSubmitted: false,
+      modalOpen: false,
+      portrait: "",
+      name: "",
+      download: ""
+    };
+  },
   components: {
-    HelloWorld
+    Search,
+    Gallery,
+    Lightbox
+  },
+  methods: {
+    searchPhotos(images, isSubmitted) {
+      this.images = images;
+      this.isSubmitted = isSubmitted;
+    },
+    imageClicked(imgUrl, currentIndex, portrait, name, download) {
+      this.modalImage = imgUrl;
+      this.currentIndex = currentIndex;
+      this.modalOpen = !this.modalOpen;
+      this.portrait = portrait;
+      this.name = name;
+      this.download = download;
+    },
+    closeModal() {
+      this.modalOpen = !this.modalOpen;
+    }
   }
-}
+};
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.wrapper {
+  width: 100%;
+}
+body {
+  font-family: "Roboto", sans-serif;
 }
 </style>
