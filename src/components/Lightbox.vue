@@ -1,14 +1,16 @@
 <template>
-  <div class="light-box" v-show="modalOpen" :class="{'open-modal': modalOpen}">
+  <div class="light-box" :class="{ 'open-modal': isModalOpen }">
     <span class="close-modal" @click="closeModal">&times;</span>
     <div class="slider-wrapper">
       <div class="user-info">
         <div>
-          <img class="portrait-image" :src="portrait" />
-          <h2>{{ name }}</h2>
+          <img class="portrait-image" :src="newImage.imagePortrait" />
+          <h2>{{ newImage.imageUsername }}</h2>
         </div>
 
-        <a class="download-btn" :href="download" download="Photograph">Download</a>
+        <a class="download-btn" :href="newImage.imageLink" download="Photograph"
+          >Download</a
+        >
       </div>
       <carousel
         class="slider-content"
@@ -16,13 +18,13 @@
         :touchDrag="true"
         :mouseDrag="true"
         paginationColor="#ccc"
-        :navigate-to="currentIndex"
+        :navigate-to="newImage.imageIndex"
       >
         <slide
           class="slider-image"
           v-for="image in images.results"
           :key="image.id"
-          :style="{backgroundImage: `url(${image.urls.regular})`}"
+          :style="{ backgroundImage: `url(${image.urls.regular})` }"
         ></slide>
       </carousel>
     </div>
@@ -37,18 +39,20 @@ export default {
     Carousel,
     Slide
   },
-  props: [
-    "images",
-    "modalImage",
-    "modalOpen",
-    "currentIndex",
-    "portrait",
-    "name",
-    "download"
-  ],
+  props: {
+    newImage: Object
+  },
   methods: {
     closeModal() {
-      this.$emit("close-modal", this.modalImage);
+      this.$store.dispatch("toggleModal");
+    }
+  },
+  computed: {
+    images() {
+      return this.$store.state.images;
+    },
+    isModalOpen() {
+      return this.$store.state.isModalOpen;
     }
   }
 };

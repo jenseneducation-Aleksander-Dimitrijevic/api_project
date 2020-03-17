@@ -4,9 +4,12 @@
       <li
         v-for="image in images.results"
         :key="image.id"
-        @click="$emit('image-clicked', image.urls.regular, images.results.indexOf(image), image.user.profile_image.medium, image.user.name, image.links.download)"
+        @click="setImageContent(image)"
       >
-        <div class="image" :style="{ backgroundImage: `url(${image.urls.small})` }"></div>
+        <div
+          class="image"
+          :style="{ backgroundImage: `url(${image.urls.small})` }"
+        ></div>
       </li>
     </ul>
   </div>
@@ -15,7 +18,24 @@
 <script>
 export default {
   name: "Gallery",
-  props: ["images"]
+  computed: {
+    images() {
+      return this.$store.state.images;
+    }
+  },
+  methods: {
+    setImageContent(image) {
+      const newImage = {
+        imageSize: image.urls.regular,
+        imageIndex: this.images.results.indexOf(image),
+        imagePortrait: image.user.profile_image.medium,
+        imageUsername: image.user.name,
+        imageLink: image.links.download
+      };
+      this.$store.dispatch("toggleModal");
+      this.$emit("image-clicked", newImage);
+    }
+  }
 };
 </script>
 

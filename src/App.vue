@@ -1,17 +1,8 @@
 <template>
   <div class="wrapper">
-    <Search @images="searchPhotos" />
-    <Gallery @image-clicked="imageClicked" :images="images" :isSubmitted="isSubmitted" />
-    <Lightbox
-      @close-modal="closeModal"
-      :images="images"
-      :currentIndex="currentIndex"
-      :modalImage="modalImage"
-      :modalOpen="modalOpen"
-      :portrait="portrait"
-      :name="name"
-      :download="download"
-    />
+    <Search />
+    <Gallery @image-clicked="imageClicked" />
+    <Lightbox :newImage="newImage" />
   </div>
 </template>
 
@@ -23,14 +14,7 @@ export default {
   name: "App",
   data() {
     return {
-      images: [],
-      currentIndex: null || 0,
-      modalImage: null,
-      isSubmitted: false,
-      modalOpen: false,
-      portrait: "",
-      name: "",
-      download: ""
+      newImage: {}
     };
   },
   components: {
@@ -39,17 +23,8 @@ export default {
     Lightbox
   },
   methods: {
-    searchPhotos(images, isSubmitted) {
-      this.images = images;
-      this.isSubmitted = isSubmitted;
-    },
-    imageClicked(imgUrl, currentIndex, portrait, name, download) {
-      this.modalImage = imgUrl;
-      this.currentIndex = currentIndex;
-      this.modalOpen = !this.modalOpen;
-      this.portrait = portrait;
-      this.name = name;
-      this.download = download;
+    imageClicked(newImage) {
+      this.newImage = newImage;
     },
     closeModal() {
       this.modalOpen = !this.modalOpen;

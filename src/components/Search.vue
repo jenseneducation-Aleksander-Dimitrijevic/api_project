@@ -9,39 +9,25 @@
 </template>
 
 <script>
-import axios from "axios";
-
+import ImageServices from "../api/ImageServices";
 export default {
   name: "Search",
   data() {
     return {
       searchTerm: "",
-      images: [],
       isSubmitted: false
     };
   },
   methods: {
     searchPhotos() {
-      const url = `https://api.unsplash.com/search/photos/?query=${this.searchTerm}&page=1&per_page=9`;
-      axios
-        .get(url, {
-          headers: {
-            Authorization:
-              "Client-ID 8oQ4xsbVsUH7SjX0BdWEOtdbIktuxcCdhmpjAw3LI0E"
-          }
-        })
-        .then(res => {
-          this.images = res.data;
-          this.isSubmitted = !this.isSubmitted;
-          this.$emit("images", this.images, this.isSubmitted);
-          this.searchTerm = "";
-        });
-
+      ImageServices.getImages(this.searchTerm).then(res => {
+        this.$store.dispatch("fetchedData", res.data);
+      });
       this.resetOutput();
     },
 
     resetOutput() {
-      this.images = [];
+      this.searchTerm = "";
       this.isSubmitted = false;
     }
   }
